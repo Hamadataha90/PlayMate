@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import app from '@/config/Firebase';
 import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
 
 function Form() {
   const router = useRouter();
@@ -29,10 +30,11 @@ function Form() {
         ...formData,
         createdAt: serverTimestamp(),
       });
+      toast.success("Post created successfully! 🎉");
       router.push('/');
     } catch (error) {
       console.error("Error adding document: ", error);
-      alert("Failed to create post. Please try again.");
+      toast.error("Failed to create post. Please try again. ❌");
     } finally {
       setLoading(false);
     }
