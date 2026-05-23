@@ -54,6 +54,7 @@ function Headrer() {
           <div className="relative group cursor-pointer ml-1">
             <div className="absolute -inset-0.5 bg-linear-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-0 group-hover:opacity-70 transition duration-300"></div>
             <Image
+            onClick={()=> router.push("/profile")}
               src={session?.user?.image || "/profile.png"}
               alt="profile"
               width={50}

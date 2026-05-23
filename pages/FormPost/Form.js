@@ -3,10 +3,12 @@ import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/fire
 import app from '@/config/Firebase';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
 
 function Form() {
   const router = useRouter();
   const db = getFirestore(app);
+  const { data: session } = useSession();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -29,6 +31,9 @@ function Form() {
       await addDoc(collection(db, 'posts'), {
         ...formData,
         createdAt: serverTimestamp(),
+        userEmail: session?.user?.email || '',
+        userName: session?.user?.name || '',
+        userImage: session?.user?.image || '',
       });
       toast.success("Post created successfully! 🎉");
       router.push('/');
