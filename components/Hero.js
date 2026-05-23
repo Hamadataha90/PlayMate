@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { FiArrowDown, FiPlus } from 'react-icons/fi'
 
@@ -6,7 +6,15 @@ function Hero() {
   const router = useRouter()
 
   const scrollToPosts = () => {
-    document.getElementById('community-posts')?.scrollIntoView({ behavior: 'smooth' })
+    if (router.pathname !== '/') {
+      // Navigate home, then scroll after the page loads
+      router.push('/#community-posts')
+      return
+    }
+    const el = document.getElementById('community-posts')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -28,6 +36,7 @@ function Hero() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
           <button
+            id="find-players-btn"
             onClick={scrollToPosts}
             className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-lg hover:shadow-[0_0_30px_rgba(79,70,229,0.4)] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
           >
@@ -35,6 +44,7 @@ function Hero() {
             <FiArrowDown size={18} className="group-hover:translate-y-1 transition-transform duration-300 animate-bounce" />
           </button>
           <button
+            id="post-match-btn"
             onClick={() => router.push('/create-post')}
             className="group inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold text-base hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
           >
