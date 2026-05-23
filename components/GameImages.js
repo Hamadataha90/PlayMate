@@ -2,7 +2,7 @@ import GamesImg from '@/GamesImagesData/Data';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-function GameImages() {
+function GameImages({ onSportClick, activeSport }) {
   const [Games, setGames] = useState([]);
   const [visibleCount, setVisibleCount] = useState(8);
 
@@ -44,7 +44,12 @@ function GameImages() {
         {Games && Games.slice(0, visibleCount).map((item, index) => (
           <div 
             key={item.id} 
-            className={`group relative flex flex-col bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border border-white/20 dark:border-gray-700/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer min-h-[250px] sm:min-h-0 ${getBentoClasses(index)}`}
+            onClick={() => onSportClick?.(item.name)}
+            className={`group relative flex flex-col bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border-2 transition-all duration-500 hover:-translate-y-2 cursor-pointer min-h-[250px] sm:min-h-0 ${getBentoClasses(index)} ${
+              activeSport === item.name
+                ? 'border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.35)]'
+                : 'border-white/20 dark:border-gray-700/50 hover:border-blue-400/40'
+            }`}
           >
             <Image 
               src={item.img} 
@@ -60,9 +65,14 @@ function GameImages() {
               <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-md mb-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-x-8 group-hover:translate-x-0 shadow-lg">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7-7m7-7H3"></path></svg>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 drop-shadow-lg tracking-wide">
+              <h3 className="text-3xl sm:text-4xl font-black text-white mb-3 drop-shadow-lg tracking-wide">
                 {item.name}
-              </h1>
+              </h3>
+              {activeSport === item.name && (
+                <span className="inline-block px-3 py-1 rounded-full bg-blue-500/80 text-white text-xs font-black mb-2 backdrop-blur-sm">
+                  Filtered ✓
+                </span>
+              )}
               <div className="h-1.5 w-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out delay-75 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
             </div>
           </div>

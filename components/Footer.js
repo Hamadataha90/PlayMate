@@ -1,6 +1,11 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import { useSession, signIn } from 'next-auth/react'
 
 function Footer() {
+  const router = useRouter()
+  const { data: session } = useSession()
+
   return (
     <footer className="relative bg-gray-950 text-gray-300 mt-16 overflow-hidden border-t border-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,var(--tw-gradient-stops))] from-blue-900/20 via-gray-950 to-gray-950"></div>
@@ -10,7 +15,12 @@ function Footer() {
         
         {/* Brand */}
         <div>
-          <h2 className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-indigo-500 mb-4 tracking-tight cursor-pointer">PlayMate</h2>
+          <h2
+            onClick={() => router.push('/')}
+            className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-indigo-500 mb-4 tracking-tight cursor-pointer hover:from-blue-300 hover:to-indigo-400 transition-all duration-300"
+          >
+            PlayMate
+          </h2>
           <p className="text-sm text-gray-400 leading-relaxed max-w-xs font-medium">
             Connect with sports players near you. Find teammates, join matches, and grow your game — Cricket, Football, Tennis, Hockey, Volleyball and more.
           </p>
@@ -20,11 +30,21 @@ function Footer() {
         <div>
           <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Sports</h3>
           <ul className="space-y-3 text-sm text-gray-400 font-medium">
-            <li className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"><span className="text-lg">🏏</span> Cricket</li>
-            <li className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"><span className="text-lg">⚽</span> Football</li>
-            <li className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"><span className="text-lg">🎾</span> Tennis</li>
-            <li className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"><span className="text-lg">🏑</span> Hockey</li>
-            <li className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"><span className="text-lg">🏐</span> Volleyball</li>
+            {[
+              { emoji: '🏏', label: 'Cricket' },
+              { emoji: '⚽', label: 'Football' },
+              { emoji: '🎾', label: 'Tennis' },
+              { emoji: '🏑', label: 'Hockey' },
+              { emoji: '🏐', label: 'Volleyball' },
+            ].map(({ emoji, label }) => (
+              <li
+                key={label}
+                onClick={() => router.push(`/?q=${label.toLowerCase()}`)}
+                className="hover:text-blue-400 transition-colors duration-300 cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-lg">{emoji}</span> {label}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -32,11 +52,36 @@ function Footer() {
         <div>
           <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Quick Links</h3>
           <ul className="space-y-3 text-sm text-gray-400 font-medium">
-            <li className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer">Home</li>
-            <li className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer">Community Posts</li>
-            <li className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer">Find Players</li>
-            <li className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer">Create a Post</li>
-            <li className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer">Sign In</li>
+            <li
+              onClick={() => router.push('/')}
+              className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer"
+            >
+              Home
+            </li>
+            <li
+              onClick={() => { router.push('/'); setTimeout(() => document.getElementById('community-posts')?.scrollIntoView({ behavior: 'smooth' }), 300); }}
+              className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer"
+            >
+              Community Posts
+            </li>
+            <li
+              onClick={() => router.push('/create-post')}
+              className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer"
+            >
+              Create a Post
+            </li>
+            <li
+              onClick={() => router.push('/profile')}
+              className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer"
+            >
+              My Profile
+            </li>
+            <li
+              onClick={() => session ? null : signIn()}
+              className="hover:text-blue-400 hover:translate-x-1 transition-all duration-300 cursor-pointer"
+            >
+              {session ? 'Signed In ✓' : 'Sign In'}
+            </li>
           </ul>
         </div>
 
@@ -45,7 +90,7 @@ function Footer() {
           <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Contact</h3>
           <ul className="space-y-3 text-sm text-gray-400 font-medium">
             <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">📧 support@players.app</li>
-            <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">📍 Egypt & Worldwide</li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">📍 Egypt &amp; Worldwide</li>
             <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">🕐 Available 24/7</li>
           </ul>
           <div className="flex gap-4 mt-6">
